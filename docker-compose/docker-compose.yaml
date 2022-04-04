@@ -45,6 +45,8 @@ services:
     restart: "on-failure"
     networks: 
       - sourcegraph
+    dns:
+      - 192.168.4.99
     depends_on:
       pgsql:
         condition: service_healthy
@@ -106,6 +108,8 @@ services:
       - '0.0.0.0:443:443'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Serves the frontend of Sourcegraph via HTTP(S).
@@ -150,6 +154,8 @@ services:
       - 'sourcegraph-frontend-0:/mnt/cache'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     depends_on:
       sourcegraph-frontend-internal:
@@ -186,6 +192,8 @@ services:
       - 'sourcegraph-frontend-internal-0:/mnt/cache'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     healthcheck:
       test: "wget -q 'http://127.0.0.1:3080/healthz' -O /dev/null || exit 1"
@@ -219,6 +227,8 @@ services:
       - 'gitserver-0:/data/repos'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     hostname: gitserver-0
 
@@ -242,6 +252,8 @@ services:
       - 'zoekt-0-shared:/data/index'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     hostname: zoekt-indexserver-0
 
@@ -267,6 +279,8 @@ services:
       - 'zoekt-0-shared:/data/index'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     hostname: zoekt-webserver-0
 
@@ -293,6 +307,8 @@ services:
       - 'searcher-0:/mnt/cache'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Rate-limiting proxy for the GitHub API.
@@ -313,6 +329,8 @@ services:
       - JAEGER_AGENT_HOST=jaeger
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Handles conversion of uploaded precise code intelligence bundles.
@@ -336,6 +354,8 @@ services:
       start_period: 60s
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Handles repository metadata (not Git data) lookups and updates from external code hosts and other similar services.
@@ -357,6 +377,8 @@ services:
       - 'repo-updater:/mnt/cache'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Manages background processes.
@@ -381,6 +403,8 @@ services:
       - 'worker:/mnt/cache'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Backend for syntax highlighting operations.
@@ -402,6 +426,8 @@ services:
       start_period: 5s
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Backend for symbols operations.
@@ -428,6 +454,8 @@ services:
       - 'symbols-0:/mnt/cache'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Prometheus collects metrics and aggregates them into graphs.
@@ -448,6 +476,8 @@ services:
       - '0.0.0.0:9090:9090'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     environment:
       - 'SRC_FRONTEND_INTERNAL=sourcegraph-frontend-internal:3090'
@@ -476,6 +506,8 @@ services:
       - '0.0.0.0:3370:3370'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
   # Description: Publishes Prometheus metrics about Docker containers.
@@ -527,6 +559,8 @@ services:
       - '0.0.0.0:6832:6832'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     command: ['--memory.max-traces=20000']
     environment:
@@ -553,6 +587,8 @@ services:
       - 'pgsql:/data/'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     stop_grace_period: 120s
 
@@ -571,6 +607,8 @@ services:
     mem_limit: '50m'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     environment:
       - 'DATA_SOURCE_NAME=postgres://sg:@pgsql:5432/?sslmode=disable'
@@ -598,6 +636,8 @@ services:
       - 'codeintel-db:/data/'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     stop_grace_period: 120s
 
@@ -616,6 +656,8 @@ services:
     mem_limit: '50m'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     environment:
       - 'DATA_SOURCE_NAME=postgres://sg:@codeintel-db:5432/?sslmode=disable'
@@ -644,6 +686,8 @@ services:
       - 'codeinsights-db:/var/lib/postgresql/data/'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     stop_grace_period: 120s
 
@@ -672,6 +716,8 @@ services:
       - 'minio:/data'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
     command: ['server', '/data']
 
@@ -690,6 +736,8 @@ services:
       - 'redis-cache:/redis-data'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
   # Description: Redis for storing semi-persistent data like user sessions.
   #
@@ -706,6 +754,8 @@ services:
       - 'redis-store:/redis-data'
     networks:
       - sourcegraph
+    dns:
+      - 192.168.4.99
     restart: always
 
 volumes:
